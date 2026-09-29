@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Edusphere Book Club — pick up to three new books each month, delivered in a box made for opening." />
+    <meta name="theme-color" content="#c6b4ff" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Caveat:wght@500..700&family=DM+Sans:opsz,wght@9..40,400..700&display=swap" rel="stylesheet" />
+    <title>Edusphere Book Club</title>
+  </head>
+  <body>
+    <div data-barba="wrapper">
+      <main data-barba="container" data-barba-namespace="home">
+        <!-- 01 · HERO ─────────────────────────────────────────────── -->
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero__blobs" data-blobs aria-hidden="true">
+            <svg viewBox="0 0 1440 1000" preserveAspectRatio="xMidYMid slice">
+              <path data-blob="0.15" fill="var(--c-lilac-lt)" d="M-80 380C120 180 300 420 520 300s300-300 560-220 460 240 460 240V1100H-80z" />
+              <path data-blob="0.35" fill="var(--c-lilac-dk)" opacity=".55" d="M-60 820c180-120 280 40 470-60s240-320 470-260 250 330 420 300 200-120 200-120V1100H-60z" />
+              <path data-blob="0.6" fill="var(--c-cobalt)" opacity=".18" d="M900 1100c30-160 140-260 280-240s260-60 260-60v300z" />
+            </svg>
+          </div>
+          <div class="hero__canvas" data-hero-canvas aria-hidden="true"></div>
+          <div class="hero__content container">
+            <h1 id="hero-title" class="t-hero" data-split="lines" data-intro>Your next favourite book is already on its way</h1>
+            <p class="t-lead" data-intro-item>A book club with no homework and no small print. Pick up to three new titles each month, open the box, then join the conversation.</p>
+            <div data-intro-item>
+              <a class="btn" href="/login.html" data-magnetic><span class="btn__label">Start my first box</span><span class="btn__icon"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+            </div>
+          </div>
+          <p class="hero__note t-hand" data-hand>new titles every full moon</p>
+        </section>
+
+        <!-- 02 · THIS MONTH'S BOOKS ──────────────────────────────── -->
+        <section class="picks" aria-labelledby="picks-title">
+          <div class="container picks__head">
+            <h2 id="picks-title" class="t-h2" data-split="lines">This moon’s picks</h2>
+            <div class="picks__aside">
+              <p class="t-hand" data-hand>chosen by humans, not algorithms</p>
+              <svg class="scribble" data-hand-scribble viewBox="0 0 200 30" aria-hidden="true"><path d="M4 20c40-14 80-14 120-4s50 6 72-8" fill="none" stroke="var(--c-coral)" stroke-width="4" stroke-linecap="round"/></svg>
+            </div>
+            <div class="picks__nav">
+              <button class="round-btn" data-slider-prev aria-label="Previous books"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M14 8H3M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button class="round-btn" data-slider-next aria-label="Next books"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+          </div>
+          <div class="slider" data-slider>
+            <div class="slider__track" data-slider-track data-render="slider"></div>
+          </div>
+        </section>
+
+        <!-- 03 · HOW IT WORKS ────────────────────────────────────── -->
+        <section class="how panel" data-panel-grow aria-labelledby="how-title">
+          <div class="how__blob" aria-hidden="true" data-parallax="0.4"></div>
+          <div class="container how__head">
+            <h2 id="how-title" class="t-h2" data-split="lines">How the club works</h2>
+            <p class="t-hand how__note" data-hand>think of us as your book-shaped fairy godparent</p>
+            <div class="how__cta">
+              <span class="how__moth" data-plop aria-hidden="true"></span>
+              <a class="btn" href="/login.html" data-magnetic><span class="btn__label">Become a member</span><span class="btn__icon"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+            </div>
+          </div>
+          <ol class="steps container" data-scatter data-momentum>
+            <li class="step" data-scatter-item data-momentum-item data-tilt="-6" style="--bg: var(--c-sun)">
+              <span class="step__num t-hand">Step #1</span>
+              <div class="step__art" data-step-art="pick"></div>
+              <h3 class="step__title">Browse the shortlist</h3>
+              <p>Each month our editors shortlist a handful of new releases across every genre.</p>
+            </li>
+            <li class="step" data-scatter-item data-momentum-item data-tilt="3" style="--bg: var(--c-coral-lt)">
+              <span class="step__num t-hand">Step #2</span>
+              <div class="step__art" data-step-art="box"></div>
+              <h3 class="step__title">Fill your box</h3>
+              <p>Choose one, two or three. Skip a month whenever life gets busy.</p>
+            </li>
+            <li class="step" data-scatter-item data-momentum-item data-tilt="-2" style="--bg: var(--c-lilac)">
+              <span class="step__num t-hand">Step #3</span>
+              <div class="step__art" data-step-art="read"></div>
+              <h3 class="step__title">Unpack &amp; read</h3>
+              <p>Your hardcovers arrive with a bookmark for each and a monthly reading prompt.</p>
+            </li>
+            <li class="step" data-scatter-item data-momentum-item data-tilt="5" style="--bg: var(--c-cream)">
+              <span class="step__num t-hand">Step #4</span>
+              <div class="step__art" data-step-art="talk"></div>
+              <h3 class="step__title">Talk it over</h3>
+              <p>Rate, review and swap theories with other members in the app.</p>
+            </li>
+          </ol>
+        </section>
+
+        <!-- 04 · THE BOX (pinned 3D) ─────────────────────────────── -->
+        <section class="box-scene" data-box-scene aria-labelledby="box-title">
+          <div class="box-scene__panel panel">
+            <h2 id="box-title" class="sr-only">What’s inside the box</h2>
+            <div class="box-scene__canvas" data-box-canvas aria-hidden="true"></div>
+            <p class="box-note box-note--a t-hand" data-box-note="open" data-tilt="-4">every box has a bookmark per book…</p>
+            <p class="box-note box-note--b t-hand" data-box-note="contents" data-tilt="3">…and a postcard with this month’s reading dare</p>
+            <p class="box-note box-note--c t-hand" data-box-note="end" data-tilt="-2">printed boxes, designed to be kept</p>
+          </div>
+        </section>
+
+        <!-- 05 · GENRES ─────────────────────────────────────────── -->
+        <section class="genres panel" data-panel-grow aria-labelledby="genres-title">
+          <div class="genres__covers" data-render="genre-covers" data-momentum aria-hidden="true"></div>
+          <p class="genres__note t-hand" data-hand>there’s a shelf for every mood</p>
+          <div class="genres__inner">
+            <h2 id="genres-title" class="t-kicker">Shelves for</h2>
+            <ul class="genres__list" data-genre-list data-render="genres"></ul>
+            <p class="genres__more t-hand">…and plenty more!</p>
+          </div>
+        </section>
+
+        <!-- 06 · BENEFITS STRIP ──────────────────────────────────── -->
+        <section class="benefits container" aria-label="Membership benefits">
+          <ul class="benefits__list">
+            <li><span class="benefits__icon" data-plop style="--bg: var(--c-sun)">★</span><strong>Every genre</strong><span>From cosy to chilling</span></li>
+            <li><span class="benefits__icon" data-plop style="--bg: var(--c-mint)">✈</span><strong>Free delivery</strong><span>On every monthly box</span></li>
+            <li><span class="benefits__icon" data-plop style="--bg: var(--c-coral-lt)">♥</span><strong>Fair price</strong><span>Less than a bookshop hardcover</span></li>
+            <li><span class="benefits__icon" data-plop style="--bg: var(--c-lilac)">✎</span><strong>Hand-picked</strong><span>By editors who read everything</span></li>
+            <li><span class="benefits__icon" data-plop style="--bg: var(--c-cream)">↺</span><strong>No lock-in</strong><span>Pause or cancel any time</span></li>
+          </ul>
+        </section>
+
+        <!-- 07 · FAQ ─────────────────────────────────────────────── -->
+        <section class="faq container" aria-labelledby="faq-title">
+          <div class="faq__head">
+            <h2 id="faq-title" class="t-h2" data-split="lines">Good questions</h2>
+            <p class="t-hand" data-hand>we get asked these a lot</p>
+            <a class="btn btn--ink btn--sm" href="/faq.html"><span class="btn__label">See every answer</span><span class="btn__icon"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+          </div>
+          <div class="faq__list" data-accordion="single">
+            <div class="faq-item">
+              <h3><button data-accordion-toggle aria-expanded="false" aria-controls="faq-1">How much does a box cost?<span class="faq-item__icon" aria-hidden="true">+</span></button></h3>
+              <div class="faq-item__panel" id="faq-1" hidden><p>This is a demo site, so there’s no real pricing. In a live version you’d see a flat monthly price for your first book, with a smaller add-on price for each extra title.</p></div>
+            </div>
+            <div class="faq-item">
+              <h3><button data-accordion-toggle aria-expanded="false" aria-controls="faq-2">Can I skip a month?<span class="faq-item__icon" aria-hidden="true">+</span></button></h3>
+              <div class="faq-item__panel" id="faq-2" hidden><p>Yes. Skip before the selection window closes and you won’t be charged for that month. Your membership simply waits for you.</p></div>
+            </div>
+            <div class="faq-item">
+              <h3><button data-accordion-toggle aria-expanded="false" aria-controls="faq-3">What if I already own one of the picks?<span class="faq-item__icon" aria-hidden="true">+</span></button></h3>
+              <div class="faq-item__panel" id="faq-3" hidden><p>Choose a different title from the shortlist, or add a pick from a previous month’s archive instead.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 08 · GIFTING ─────────────────────────────────────────── -->
+        <section class="gift panel" data-panel-grow aria-labelledby="gift-title">
+          <div class="gift__copy">
+            <p class="t-hand" data-hand>better than socks. we checked.</p>
+            <h2 id="gift-title" class="t-h2" data-split="lines">Give someone a whole stack of stories</h2>
+            <p class="t-lead" data-reveal>Send one month, three months or a full year. They choose the books; you take the credit.</p>
+            <div data-reveal><a class="btn btn--ink" href="/gifting.html" data-confetti="📚,✨,🎁,📖" data-magnetic><span class="btn__label">Gift a membership</span><span class="btn__icon"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></div>
+          </div>
+          <div class="gift__visual" aria-hidden="true">
+            <div class="gift-box" data-float="14">
+              <div class="gift-box__lid"></div>
+              <div class="gift-box__body"></div>
+              <div class="gift-box__ribbon"></div>
+              <div class="gift-box__bow"><span></span><span></span></div>
+            </div>
+            <span class="gift__tag t-hand" data-plop>to: you ♥</span>
+          </div>
+        </section>
+
+        <!-- 09 · READERS' CHOICE ─────────────────────────────────── -->
+        <section class="choice panel" data-panel-grow aria-labelledby="choice-title">
+          <div class="container">
+            <div class="choice__head">
+              <h2 id="choice-title" class="t-h2" data-split="lines">Readers’ Choice</h2>
+              <p class="t-hand" data-hand>every year, members vote for the one they couldn’t stop talking about</p>
+            </div>
+            <div class="choice__body" data-tabs data-render="choice"></div>
+            <p class="choice__next">Next vote opens: <strong>Autumn 2026</strong></p>
+          </div>
+        </section>
+
+        <!-- 10 · EXCLUSIVE ───────────────────────────────────────── -->
+        <section class="exclusive container" aria-labelledby="exclusive-title">
+          <div class="exclusive__visual" data-momentum>
+            <div class="book3d" data-momentum-item data-tilt="-6">
+              <div class="book3d__cover"><span class="book3d__kicker">A Edusphere Original</span><span class="book3d__title">After the Lamps Go Out</span><span class="book3d__sub">seven short stories for reading past midnight</span></div>
+              <div class="book3d__pages"></div>
+              <div class="book3d__back"></div>
+            </div>
+            <span class="exclusive__sticker" data-plop>only here!</span>
+          </div>
+          <div class="exclusive__copy">
+            <p class="tag" data-tone="coral">Club exclusive</p>
+            <h2 id="exclusive-title" class="t-h2" data-split="lines">After the Lamps Go Out</h2>
+            <p class="t-lead" data-reveal>An anthology commissioned for members: seven new stories from seven past club authors, each set on the same sleepless night.</p>
+            <div class="exclusive__meta" data-reveal>
+              <span class="stars" aria-label="Rated 4.5 out of 5 by members (demo)">★★★★<span class="stars__half">★</span></span>
+              <span>Member rating · demo data</span>
+            </div>
+            <ul class="exclusive__authors" data-reveal>
+              <li>Imogen Varga</li><li>Teo Achterberg</li><li>Rhea Okonkwo</li><li>Maren Lisle</li><li>Sol Ferreira</li><li>Kasimir Toll</li><li>Nia Brightwater</li>
+            </ul>
+            <div data-reveal><a class="btn" href="/books.html" data-magnetic><span class="btn__label">Add to my box</span><span class="btn__icon"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></div>
+          </div>
+        </section>
+
+        <div data-footer-slot></div>
+      </main>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
