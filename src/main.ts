@@ -17,7 +17,7 @@ import { initText } from './motion/text';
 import { dur, ease, reducedMotion, type Cleanup } from './motion/tokens';
 import { curtainEnter, curtainLeave } from './motion/transitions';
 import { footerHTML, markActive, mountChrome } from './ui/chrome';
-import { renderBookGrid, renderBookSlider, renderChoice, renderGenreCovers, renderGenreList, stepArt } from './ui/render';
+import { embedURL, renderBookGrid, renderBookSlider, renderChoice, renderCoursePage, renderCourseTracks, renderGenreCovers, renderGenreList, stepArt, watchURL } from './ui/render';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,12 +29,13 @@ function playIntro(scope: HTMLElement) {
   const tl = gsap.timeline({ delay: 0.05 });
   const heading = scope.querySelector<HTMLElement & { _intro?: gsap.core.Tween }>('[data-intro][data-split]');
   if (heading?._intro) tl.add(heading._intro.play(), 0.2);
+  heading?.setAttribute('data-intro-played', '');
   const rest = scope.querySelectorAll('[data-intro-item]');
   if (rest.length && !r) tl.from(rest, { y: 30, opacity: 0, duration: dur.standard, ease: ease.standard, stagger: 0.1 }, 0.45);
   return tl;
 }
 
-/** Books page: animated genre filter. */
+/** Courses page: animated subject filter. */
 function initFilter(scope: HTMLElement): Cleanup {
   const bar = scope.querySelector<HTMLElement>('[data-filter]');
   if (!bar) return () => {};
@@ -56,6 +57,54 @@ function initFilter(scope: HTMLElement): Cleanup {
   const q = new URLSearchParams(location.search).get('genre');
   if (q) requestAnimationFrame(() => apply(q));
   return () => bar.removeEventListener('click', click);
+}
+
+/** Course page: swap YouTube lessons in the player and remember what was watched. */
+function initPlayer(scope: HTMLElement): Cleanup {
+  const root = scope.querySelector<HTMLElement>('[data-player]');
+  if (!root) return () => {};
+  const key = 'edusphere:watched';
+  const read = (): string[] => {
+    try {
+      return JSON.parse(localStorage.getItem(key) || '[]');
+    } catch {
+      return [];
+    }
+  };
+  const watched = new Set(read());
+  const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-lesson]')];
+  const frame = root.querySelector<HTMLElement>('[data-player-frame]')!;
+  const iframe = root.querySelector<HTMLIFrameElement>('[data-player-iframe]')!;
+  const bar = root.querySelector<HTMLElement>('[data-player-bar]')!;
+
+  const paint = () => {
+    const done = buttons.filter((b) => watched.has(b.dataset.lesson!)).length;
+    buttons.forEach((b) => b.toggleAttribute('data-watched', watched.has(b.dataset.lesson!)));
+    root.querySelector('[data-player-progress]')!.textContent = `${done} / ${buttons.length}`;
+    gsap.to(bar, { scaleX: done / buttons.length, duration: reducedMotion() ? 0 : dur.standard, ease: ease.pop });
+  };
+  const play = (btn: HTMLButtonElement) => {
+    const id = btn.dataset.lesson!;
+    buttons.forEach((b) => (b === btn ? b.setAttribute('aria-current', 'true') : b.removeAttribute('aria-current')));
+    iframe.src = embedURL(id, true);
+    iframe.title = btn.dataset.title!;
+    root.querySelector('[data-player-title]')!.textContent = btn.dataset.title!;
+    root.querySelector('[data-player-channel]')!.textContent = `by ${btn.dataset.channel}`;
+    root.querySelector<HTMLAnchorElement>('[data-player-source]')!.href = watchURL(id);
+    watched.add(id);
+    try {
+      localStorage.setItem(key, JSON.stringify([...watched]));
+    } catch {}
+    paint();
+    if (!reducedMotion()) gsap.fromTo(frame, { scale: 0.96, rotate: -1.5 }, { scale: 1, rotate: 0, duration: dur.standard, ease: ease.pop });
+  };
+  const click = (e: Event) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-lesson]');
+    if (b) play(b);
+  };
+  root.addEventListener('click', click);
+  paint();
+  return () => root.removeEventListener('click', click);
 }
 
 function initLogin(scope: HTMLElement): Cleanup {
@@ -99,6 +148,10 @@ async function initPage(container: HTMLElement) {
   if (slider) renderBookSlider(slider);
   const grid = container.querySelector<HTMLElement>('[data-render="grid"]');
   if (grid) renderBookGrid(grid);
+  const tracks = container.querySelector<HTMLElement>('[data-render="tracks"]');
+  if (tracks) renderCourseTracks(tracks);
+  const course = container.querySelector<HTMLElement>('[data-render="course"]');
+  if (course) renderCoursePage(course, new URLSearchParams(location.search).get('id'));
   const gl = container.querySelector<HTMLElement>('[data-render="genres"]');
   if (gl) renderGenreList(gl);
   const gc = container.querySelector<HTMLElement>('[data-render="genre-covers"]');
@@ -119,6 +172,7 @@ async function initPage(container: HTMLElement) {
     initTabs(container),
     initConfetti(container),
     initFilter(container),
+    initPlayer(container),
     initLogin(container),
     initContact(container),
     initFloatingCta(container),
@@ -139,6 +193,12 @@ async function initPage(container: HTMLElement) {
   document.documentElement.dataset.page = ns ?? '';
   ScrollTrigger.refresh();
   playIntro(container);
+
+  // Deep links such as /courses.html#data-science land on that course track.
+  const hash = decodeURIComponent(location.hash.slice(1));
+  const target = hash ? container.querySelector<HTMLElement>(`#${CSS.escape(hash)}`) : null;
+  // Wait for the intro and ScrollTrigger refresh to settle; the track's scroll-margin clears the nav.
+  if (target) setTimeout(() => target.scrollIntoView(), 700);
 }
 
 function destroyPage() {

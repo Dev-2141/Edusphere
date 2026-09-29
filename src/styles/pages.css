@@ -1,4 +1,4 @@
-/* Inner pages: books, gifting, faq, login */
+/* Inner pages: courses, course, gifting, faq, login */
 
 .page-hero {
   position: relative;
@@ -93,3 +93,94 @@
 .contact__info .t-hand { transform: rotate(-3deg); transform-origin: left; }
 .contact .login__sheet { transform: rotate(var(--tilt, 0deg)); }
 @media (max-width: 991px) { .contact { grid-template-columns: 1fr; } }
+
+/* Course tracks (All Courses page + "More in …" on the course page) */
+.tracks { display: grid; gap: var(--section-y); padding-bottom: var(--section-y); }
+.track { display: grid; gap: 2.5rem; scroll-margin-top: calc(var(--nav-h) + 1rem); }
+.track__head { display: grid; gap: 0.8rem; justify-items: start; max-width: 60ch; }
+.track__head .t-hand { transform: rotate(-3deg); transform-origin: left; }
+.track__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem 1.5rem; align-items: start; }
+.course-card { padding: 1rem 1rem 1.6rem; transition: transform var(--dur-standard) var(--ease-spring), box-shadow var(--dur-standard); }
+.course-card:hover { box-shadow: var(--sh-lift); }
+.course-card__link { display: grid; gap: 0.8rem; }
+.course-card__thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--c-ink);
+  box-shadow: 0 14px 26px -14px rgb(0 0 0 / 0.6);
+}
+.course-card__thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-standard) var(--ease-out); }
+.course-card:hover .course-card__thumb img { transform: scale(1.06); }
+.course-card__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--c-cream);
+  color: var(--c-ink);
+  box-shadow: var(--sh-card);
+  transition: transform var(--dur-micro) var(--ease-spring), background-color var(--dur-fast);
+}
+.course-card__play svg { width: 22px; height: 22px; margin-left: 3px; }
+.course-card:hover .course-card__play { transform: scale(1.15) rotate(-8deg); background: var(--c-sun); }
+.plan .course-card__by { font-size: 1.3rem; line-height: 1.05; transform: rotate(-2deg); transform-origin: left; }
+.course-card .t-h3 { font-size: clamp(1.4rem, 1.1rem + 0.9vw, 1.9rem); line-height: 0.95; }
+.course-card p:not(.t-hand) { font-size: 0.95rem; }
+
+/* Course page: lesson player */
+.page-hero .course-hero__title { max-width: 16ch; }
+.page-hero .t-hand a { color: var(--c-coral); transition: color var(--dur-fast); }
+.page-hero .t-hand a:hover { color: var(--c-ink); }
+.player { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 2.5rem; align-items: start; padding-block: 4rem var(--section-y); }
+.player__stage { position: sticky; top: calc(var(--nav-h) + 1rem); display: grid; gap: 1.2rem; }
+.player__frame {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--c-ink);
+  box-shadow: var(--sh-lift);
+}
+.player__frame iframe { width: 100%; height: 100%; border: 0; }
+.player__now { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+.player__now p { display: grid; gap: 0.1rem; }
+.player__now .t-hand { font-size: 1.4rem; color: var(--c-coral); transform: rotate(-2deg); transform-origin: left; }
+.player__now strong { font-family: var(--f-display); font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.1; }
+.player__now span:last-child { font-size: var(--fs-small); opacity: 0.7; }
+.player__now .pill { background: var(--c-paper); }
+.player__side { display: grid; gap: 1.8rem; }
+.player__progress { display: grid; gap: 0.5rem; }
+.player__bar { display: block; height: 12px; border: 2px solid var(--c-ink); border-radius: var(--r-pill); overflow: hidden; background: var(--c-cream); }
+.player__bar span { display: block; height: 100%; background: var(--c-mint); transform: scaleX(0); transform-origin: left; }
+.player__lessons .faq-item button { justify-content: flex-start; font-size: 1.05rem; padding-block: 1.1rem; }
+.player__num { flex: none; font-family: var(--f-hand); font-size: 1.6rem; color: var(--c-coral); }
+.player__name { flex: 1; display: grid; gap: 0.2rem; }
+.player__name small { font-family: var(--f-body); font-weight: 500; font-size: var(--fs-small); opacity: 0.65; letter-spacing: 0; }
+.player__check {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--c-ink);
+  border-radius: 50%;
+  font-size: 0.95rem;
+  color: transparent;
+  transition: background-color var(--dur-fast), color var(--dur-fast), transform var(--dur-micro) var(--ease-spring);
+}
+.player__lesson[data-watched] .player__check { background: var(--c-mint); color: var(--c-ink); transform: rotate(-10deg); }
+.player__lesson[aria-current="true"] { color: var(--c-coral); }
+.player__lesson[aria-current="true"] .player__check { background: var(--c-coral); color: var(--c-cream); border-color: var(--c-coral); }
+.player__skills { display: grid; gap: 0.6rem; }
+.player__skills .t-hand { font-size: 1.5rem; transform: rotate(-2deg); transform-origin: left; }
+
+@media (max-width: 991px) {
+  .player { grid-template-columns: 1fr; }
+  .player__stage { position: static; }
+}

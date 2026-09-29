@@ -27,7 +27,8 @@ export function initText(scope: HTMLElement): Cleanup {
             duration: dur.editorial,
             ease: ease.expressive,
             stagger: stagger.words,
-            paused: el.hasAttribute('data-intro'),
+            // A re-split after the page intro already ran (autoSplit on resize) plays straight away.
+            paused: el.hasAttribute('data-intro') && !el.hasAttribute('data-intro-played'),
             scrollTrigger: el.hasAttribute('data-intro') ? undefined : { trigger: el, start: 'top 85%' },
           });
           if (el.hasAttribute('data-intro')) (el as HTMLElement & { _intro?: gsap.core.Tween })._intro = tw;

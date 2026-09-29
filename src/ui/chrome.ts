@@ -9,13 +9,13 @@ export const arrow = `<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><p
 export const btn = (label: string, href: string, tone = '', attrs = '') =>
   `<a class="btn ${tone}" href="${href}" ${attrs}><span class="btn__label">${label}</span><span class="btn__icon">${arrow}</span></a>`;
 
-// Original brand mark: a moth whose wings are two open book pages.
+// Original brand mark: a moth whose wings are two open pages.
 export const mothMark = `<svg class="moth" viewBox="0 0 64 64" aria-hidden="true"><g fill="currentColor"><path d="M31 18c-6-9-20-12-26-6-5 6 0 18 9 21-6 3-8 12-2 16 6 4 14-2 19-12z"/><path d="M33 18c6-9 20-12 26-6 5 6 0 18-9 21 6 3 8 12 2 16-6 4-14-2-19-12z"/><rect x="30" y="16" width="4" height="30" rx="2"/><path d="M31 17c-2-5-6-8-9-9M33 17c2-5 6-8 9-9" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></g><g fill="var(--wing, #fff8ec)" opacity=".9"><path d="M28 22c-5-5-13-6-17-3"/><path d="M13 22h12M12 26h14M16 30h11" stroke="var(--wing, #fff8ec)" stroke-width="1.4" stroke-linecap="round"/><path d="M39 22h12M38 26h14M37 30h11" stroke="var(--wing, #fff8ec)" stroke-width="1.4" stroke-linecap="round"/></g></svg>`;
 
-const logo = `<a class="logo" href="/" aria-label="Edusphere Book Club — home">${mothMark}<span class="logo__word">Edusphere</span><span class="logo__club">Book<br/>Club</span></a>`;
+const logo = `<a class="logo" href="/" aria-label="Edusphere — home">${mothMark}<span class="logo__word">Edusphere</span><span class="logo__club">Learn<br/>Online</span></a>`;
 
 const links = [
-  ['All Books', '/books.html'],
+  ['All Courses', '/courses.html'],
   ['Gifting', '/gifting.html'],
   ['FAQ', '/faq.html'],
 ];
@@ -41,13 +41,13 @@ export function mountChrome() {
   menu.innerHTML = `
     <nav class="menu__inner" aria-label="Mobile">
       ${[['Home', '/'], ...links, ['About & Contact', '/contact.html'], ['Log-in / Join', '/login.html']].map(([l, h]) => `<a class="menu__link" href="${h}">${l}</a>`).join('')}
-      <p class="t-hand menu__note">new books every full moon</p>
+      <p class="t-hand menu__note">new courses every month</p>
     </nav>`;
 
   const cta = document.createElement('div');
   cta.className = 'floating-cta';
   cta.dataset.floatingCta = '';
-  cta.innerHTML = btn('Join the club', '/login.html', '', 'data-magnetic');
+  cta.innerHTML = btn('Join for free', '/login.html', '', 'data-magnetic');
 
   const curtain = document.createElement('div');
   curtain.className = 'curtain';
@@ -94,7 +94,7 @@ export function footerHTML() {
     <div class="footer__inner" data-footer-inner>
       <div class="footer__top">
         <div class="footer__signup">
-          <p class="t-hand">letters from Edusphere, once a month</p>
+          <p class="t-hand">new courses in your inbox, once a month</p>
           <form class="footer__form" onsubmit="event.preventDefault(); this.querySelector('output').textContent='Thanks! (demo — nothing was sent)';">
             <label class="sr-only" for="news-email">Email address</label>
             <input id="news-email" type="email" placeholder="you@example.com" required />
@@ -103,13 +103,13 @@ export function footerHTML() {
           </form>
         </div>
         <nav class="footer__links" aria-label="Footer">
-          <div><p class="footer__h">Club</p><a href="/books.html">All books</a><a href="/gifting.html">Gifting</a><a href="/faq.html">FAQ</a><a href="/contact.html">About &amp; contact</a></div>
+          <div><p class="footer__h">Learn</p><a href="/courses.html">All courses</a><a href="/gifting.html">Gifting</a><a href="/faq.html">FAQ</a><a href="/contact.html">About &amp; contact</a></div>
           <div><p class="footer__h">Account</p><a href="/login.html">Log in</a><a href="/login.html">Join</a></div>
           <div><p class="footer__h">Small print</p><a href="#">Terms (placeholder)</a><a href="#">Privacy (placeholder)</a></div>
         </nav>
       </div>
       <div class="footer__mark" data-footer-mark aria-hidden="true">${mothMark}<span>Edusphere</span></div>
-      <p class="footer__legal">© 2026 Edusphere Book Club — a fictional brand built as a motion-design study. All books and authors are invented.</p>
+      <p class="footer__legal">© 2026 Edusphere — a demo learning platform built as a motion-design study. Video lessons are embedded from YouTube and belong to their original creators.</p>
     </div>
   </footer>`;
 }

@@ -14,7 +14,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         home: resolve(root, 'index.html'),
-        books: resolve(root, 'books.html'),
+        courses: resolve(root, 'courses.html'),
+        course: resolve(root, 'course.html'),
         gifting: resolve(root, 'gifting.html'),
         faq: resolve(root, 'faq.html'),
         login: resolve(root, 'login.html'),

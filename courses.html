@@ -3,29 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Edusphere Book Club — pick up to three new books each month, delivered in a box made for opening." />
+    <meta name="description" content="Edusphere — learn in-demand skills with free, curated video courses from the world’s best educators, organised into subjects and courses." />
     <meta name="theme-color" content="#c6b4ff" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Caveat:wght@500..700&family=DM+Sans:opsz,wght@9..40,400..700&display=swap" rel="stylesheet" />
-    <title>All books — Edusphere Book Club</title>
+    <title>All courses — Edusphere</title>
   </head>
   <body>
     <div data-barba="wrapper">
-      <main data-barba="container" data-barba-namespace="books">
+      <main data-barba="container" data-barba-namespace="courses">
 
         <section class="page-hero" style="--bg: var(--c-sun)">
           <div class="container">
-            <p class="t-hand" data-hand>the whole shelf, in one place</p>
-            <h1 class="t-hero" data-split="lines" data-intro>All books</h1>
-            <p class="t-lead" data-intro-item>Every title from this moon’s shortlist and the archive. Filter by the kind of story you’re in the mood for.</p>
+            <p class="t-hand" data-hand>every subject, in one place</p>
+            <h1 class="t-hero" data-split="lines" data-intro>All courses</h1>
+            <p class="t-lead" data-intro-item>Eleven subjects, dozens of free video courses from top educators. Pick a subject, filter by what you want to learn, then press play.</p>
           </div>
         </section>
         <section class="catalog container">
           <div class="filter" data-filter role="group" aria-label="Filter by subject"><button class="pill" data-value="All" aria-pressed="true">All</button><button class="pill" data-value="Tech" aria-pressed="false">Tech</button><button class="pill" data-value="Business" aria-pressed="false">Business</button><button class="pill" data-value="Science" aria-pressed="false">Science</button><button class="pill" data-value="Health" aria-pressed="false">Health</button><button class="pill" data-value="Skills" aria-pressed="false">Skills</button><button class="pill" data-value="Humanities" aria-pressed="false">Humanities</button></div>
           <div class="catalog__grid" data-render="grid"></div>
         </section>
+        <div class="tracks container" data-render="tracks"></div>
         <div data-footer-slot></div>
       </main>
     </div>

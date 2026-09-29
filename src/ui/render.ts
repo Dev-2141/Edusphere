@@ -1,4 +1,4 @@
-import { books, byId, genres, readersChoice, type Book } from '../data/books';
+import { books, byId, courseById, readersChoice, topics, type Book, type Course } from '../data/books';
 import { coverURL } from '../data/covers';
 
 const toneOrder = ['sun', 'lilac', 'mint', 'coral', 'cobalt'];
@@ -11,7 +11,7 @@ export function bookCard(b: Book, i: number) {
   const extra = b.extra ? `<span class="tag" data-tone="${toneOrder[(i + 2) % toneOrder.length]}">${b.extra}</span>` : '';
   return `
     <article class="book-card" data-tone="${b.card}" data-slider-item data-tilt="${tilt}" style="--tilt:${tilt}deg">
-      <a class="book-card__link" href="/books.html#${b.id}" draggable="false">
+      <a class="book-card__link" href="/courses.html#${b.id}" draggable="false">
         <figure class="book-card__cover"><img src="${coverURL(b)}" alt="${b.title}: ${b.author}" width="420" height="630" draggable="false" loading="lazy"/></figure>
         <div class="book-card__body">
           <div class="book-card__tags">${tags}${extra}</div>
@@ -31,7 +31,7 @@ export function renderBookGrid(el: HTMLElement) {
 }
 
 export function renderGenreList(el: HTMLElement) {
-  el.innerHTML = genres.map((g) => `<li data-genre><a href="/books.html?genre=${encodeURIComponent(g)}">${g}</a></li>`).join('');
+  el.innerHTML = topics.map((t) => `<li data-genre><a href="/course.html?id=${t.course}">${t.label}</a></li>`).join('');
 }
 
 export function renderGenreCovers(el: HTMLElement) {
@@ -57,7 +57,7 @@ export function renderChoice(el: HTMLElement) {
       <div class="choice__panel" role="tabpanel" id="panel-${c.year}" aria-labelledby="tab-${c.year}" ${i ? 'hidden' : ''}>
         <img class="choice__cover" data-tab-anim data-tilt="-4" src="${coverURL(b)}" alt="${b.title}" width="420" height="630" loading="lazy"/>
         <div class="choice__meta">
-          <p class="t-hand" data-tab-anim>Readers’ pick ${c.year}</p>
+          <p class="t-hand" data-tab-anim>Learners’ pick ${c.year}</p>
           <h3 class="t-h3" data-tab-anim>${b.title}</h3>
           <p class="choice__author" data-tab-anim>${b.author}</p>
           <p class="choice__note" data-tab-anim>${c.note}</p>
@@ -68,9 +68,121 @@ export function renderChoice(el: HTMLElement) {
     })
     .join('');
   el.innerHTML = `
-    <div class="choice__tabs" role="tablist" aria-label="Readers’ choice by year">${tabs}<span class="choice__indicator" data-tabs-indicator></span></div>
+    <div class="choice__tabs" role="tablist" aria-label="Learners’ choice by year">${tabs}<span class="choice__indicator" data-tabs-indicator></span></div>
     ${panels}`;
 }
+
+// ---- Courses (sub-topics) & video lessons -----------------------------------
+
+const planTones = ['var(--c-sun)', 'var(--c-lilac)', 'var(--c-mint)', 'var(--c-coral-lt)', 'var(--c-cream)'];
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+export const thumbURL = (youtube: string) => `https://i.ytimg.com/vi/${youtube}/hqdefault.jpg`;
+export const embedURL = (youtube: string, autoplay = false) =>
+  `https://www.youtube-nocookie.com/embed/${youtube}?rel=0&modestbranding=1${autoplay ? '&autoplay=1' : ''}`;
+export const watchURL = (youtube: string) => `https://www.youtube.com/watch?v=${youtube}`;
+
+export function courseCard(c: Course, i: number) {
+  const tilt = [-2, 1.5, -1, 2, -1.5, 1][i % 6];
+  return `
+    <article class="plan course-card" data-scatter-item data-momentum-item data-tilt="${tilt}" style="--bg: ${planTones[i % planTones.length]}">
+      <a class="course-card__link" href="/course.html?id=${c.id}">
+        <figure class="course-card__thumb"><img src="${thumbURL(c.lessons[0].youtube)}" alt="" width="480" height="360" loading="lazy"/><span class="course-card__play" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M5 3.5v9l7.5-4.5z" fill="currentColor"/></svg></span></figure>
+        <p class="course-card__by t-hand">${c.instructor}</p>
+        <h3 class="t-h3">${c.title}</h3>
+        <p>${c.summary}</p>
+        <div class="book-card__tags"><span class="tag" data-tone="cream">${c.level}</span><span class="tag" data-tone="${toneOrder[(i + 1) % toneOrder.length]}">${c.lessons.length} video lesson${c.lessons.length > 1 ? 's' : ''}</span></div>
+      </a>
+    </article>`;
+}
+
+/** All Courses page: one track per main course, listing its sub-topic courses. */
+export function renderCourseTracks(el: HTMLElement) {
+  el.innerHTML = books
+    .map(
+      (b) => `
+    <section class="track" id="${b.id}" data-filter-item data-genres="${b.genres.join('|')}" aria-labelledby="track-${b.id}">
+      <div class="track__head">
+        <p class="t-hand" data-hand>${b.author}</p>
+        <h2 class="t-h2" id="track-${b.id}" data-split="lines">${b.title}</h2>
+        <p class="t-lead">${b.blurb}</p>
+      </div>
+      <div class="track__list" data-scatter data-momentum>${b.courses.map(courseCard).join('')}</div>
+    </section>`,
+    )
+    .join('');
+}
+
+/** Course page: hero, YouTube lesson player + lesson list, then sibling courses. */
+export function renderCoursePage(el: HTMLElement, id: string | null) {
+  const c = id ? courseById(id) : undefined;
+  if (!c) {
+    el.innerHTML = `
+      <section class="page-hero" style="--bg: var(--c-coral-lt)">
+        <div class="container">
+          <p class="t-hand" data-hand>this one wandered off</p>
+          <h1 class="t-hero" data-split="lines" data-intro>Course not found</h1>
+          <div data-intro-item><a class="btn btn--ink" href="/courses.html"><span class="btn__label">Browse all courses</span><span class="btn__icon">${arrowIcon}</span></a></div>
+        </div>
+      </section>`;
+    return;
+  }
+  document.title = `${c.title} — Edusphere`;
+  const b = c.category;
+  const first = c.lessons[0];
+  const hero = { sun: 'var(--c-sun)', coral: 'var(--c-coral-lt)', mint: 'var(--c-mint)', lilac: 'var(--c-lilac)', cobalt: 'var(--c-lilac-lt)', cream: 'var(--c-cream)', ink: 'var(--c-mint)' }[b.card];
+  const lessons = c.lessons
+    .map(
+      (l, i) => `
+        <li class="faq-item"><h3><button class="player__lesson" data-lesson="${l.youtube}" data-title="${esc(l.title)}" data-channel="${esc(l.channel)}" ${i === 0 ? 'aria-current="true"' : ''}>
+          <span class="player__num">${String(i + 1).padStart(2, '0')}</span>
+          <span class="player__name">${l.title}<small>${l.channel}</small></span>
+          <span class="player__check" aria-hidden="true">✓</span>
+        </button></h3></li>`,
+    )
+    .join('');
+  const siblings = b.courses.filter((s) => s.id !== c.id);
+  el.innerHTML = `
+    <section class="page-hero" style="--bg: ${hero}">
+      <div class="container">
+        <p class="t-hand" data-hand><a href="/courses.html#${b.id}">${b.title}</a> · ${c.level.toLowerCase()} course</p>
+        <h1 class="t-h2 course-hero__title" data-split="lines" data-intro>${c.title}</h1>
+        <p class="t-lead" data-intro-item>${c.summary}</p>
+        <div class="book-card__tags" data-intro-item><span class="tag" data-tone="cream">${c.instructor}</span><span class="tag" data-tone="sun">${c.lessons.length} video lesson${c.lessons.length > 1 ? 's' : ''}</span><span class="tag">Free to watch</span></div>
+      </div>
+    </section>
+
+    <section class="player container" data-player="${c.id}" aria-label="Course player">
+      <div class="player__stage">
+        <div class="player__frame" data-player-frame>
+          <iframe data-player-iframe src="${embedURL(first.youtube)}" title="${esc(first.title)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="player__now">
+          <p><span class="t-hand">now playing</span><strong data-player-title>${first.title}</strong><span data-player-channel>by ${first.channel}</span></p>
+          <a class="pill" data-player-source href="${watchURL(first.youtube)}" target="_blank" rel="noopener">Watch on YouTube ↗</a>
+        </div>
+      </div>
+      <aside class="player__side">
+        <div class="player__progress"><p><strong data-player-progress>0 / ${c.lessons.length}</strong> lessons watched</p><span class="player__bar"><span data-player-bar></span></span></div>
+        <ol class="faq__list player__lessons">${lessons}</ol>
+        <div class="player__skills"><p class="t-hand">skills you’ll gain</p><div class="book-card__tags">${c.skills.map((s, i) => `<span class="tag" data-tone="${toneOrder[i % toneOrder.length]}">${s}</span>`).join('')}</div></div>
+        <p class="plans__note">Lessons are embedded from YouTube. All videos belong to their original creators.</p>
+      </aside>
+    </section>
+
+    ${
+      siblings.length
+        ? `<section class="track container" aria-labelledby="more-title">
+      <div class="track__head">
+        <p class="t-hand" data-hand>keep going</p>
+        <h2 class="t-h2" id="more-title" data-split="lines">More in ${b.title}</h2>
+      </div>
+      <div class="track__list" data-scatter data-momentum>${siblings.map(courseCard).join('')}</div>
+    </section>`
+        : ''
+    }`;
+}
+
+const arrowIcon = `<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
 // Original line illustrations for the four steps (drawn for this project).
 export const stepArt = {
