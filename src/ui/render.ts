@@ -11,7 +11,7 @@ export function bookCard(b: Book, i: number) {
   const extra = b.extra ? `<span class="tag" data-tone="${toneOrder[(i + 2) % toneOrder.length]}">${b.extra}</span>` : '';
   return `
     <article class="book-card" data-tone="${b.card}" data-slider-item data-tilt="${tilt}" style="--tilt:${tilt}deg">
-      <a class="book-card__link" href="/courses.html#${b.id}" draggable="false">
+      <a class="book-card__link" href="courses.html#${b.id}" draggable="false">
         <figure class="book-card__cover"><img src="${coverURL(b)}" alt="${b.title}: ${b.author}" width="420" height="630" draggable="false" loading="lazy"/></figure>
         <div class="book-card__body">
           <div class="book-card__tags">${tags}${extra}</div>
@@ -31,7 +31,7 @@ export function renderBookGrid(el: HTMLElement) {
 }
 
 export function renderGenreList(el: HTMLElement) {
-  el.innerHTML = topics.map((t) => `<li data-genre><a href="/course.html?id=${t.course}">${t.label}</a></li>`).join('');
+  el.innerHTML = topics.map((t) => `<li data-genre><a href="course.html?id=${t.course}">${t.label}</a></li>`).join('');
 }
 
 export function renderGenreCovers(el: HTMLElement) {
@@ -84,8 +84,8 @@ export const watchURL = (youtube: string) => `https://www.youtube.com/watch?v=${
 export function courseCard(c: Course, i: number) {
   const tilt = [-2, 1.5, -1, 2, -1.5, 1][i % 6];
   return `
-    <article class="plan course-card" data-scatter-item data-momentum-item data-tilt="${tilt}" style="--bg: ${planTones[i % planTones.length]}">
-      <a class="course-card__link" href="/course.html?id=${c.id}">
+    <article class="plan course-card spotlight" data-scatter-item data-momentum-item data-tilt="${tilt}" style="--bg: ${planTones[i % planTones.length]}">
+      <a class="course-card__link" href="course.html?id=${c.id}">
         <figure class="course-card__thumb"><img src="${thumbURL(c.lessons[0].youtube)}" alt="" width="480" height="360" loading="lazy"/><span class="course-card__play" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M5 3.5v9l7.5-4.5z" fill="currentColor"/></svg></span></figure>
         <p class="course-card__by t-hand">${c.instructor}</p>
         <h3 class="t-h3">${c.title}</h3>
@@ -104,7 +104,7 @@ export function renderCourseTracks(el: HTMLElement) {
       <div class="track__head">
         <p class="t-hand" data-hand>${b.author}</p>
         <h2 class="t-h2" id="track-${b.id}" data-split="lines">${b.title}</h2>
-        <p class="t-lead">${b.blurb}</p>
+        <p class="t-lead" data-depth-blur>${b.blurb}</p>
       </div>
       <div class="track__list" data-scatter data-momentum>${b.courses.map(courseCard).join('')}</div>
     </section>`,
@@ -121,7 +121,7 @@ export function renderCoursePage(el: HTMLElement, id: string | null) {
         <div class="container">
           <p class="t-hand" data-hand>this one wandered off</p>
           <h1 class="t-hero" data-split="lines" data-intro>Course not found</h1>
-          <div data-intro-item><a class="btn btn--ink" href="/courses.html"><span class="btn__label">Browse all courses</span><span class="btn__icon">${arrowIcon}</span></a></div>
+          <div data-intro-item><a class="btn btn--ink" href="courses.html"><span class="btn__label">Browse all courses</span><span class="btn__icon">${arrowIcon}</span></a></div>
         </div>
       </section>`;
     return;
@@ -144,7 +144,7 @@ export function renderCoursePage(el: HTMLElement, id: string | null) {
   el.innerHTML = `
     <section class="page-hero" style="--bg: ${hero}">
       <div class="container">
-        <p class="t-hand" data-hand><a href="/courses.html#${b.id}">${b.title}</a> · ${c.level.toLowerCase()} course</p>
+        <p class="t-hand" data-hand><a href="courses.html#${b.id}">${b.title}</a> · ${c.level.toLowerCase()} course</p>
         <h1 class="t-h2 course-hero__title" data-split="lines" data-intro>${c.title}</h1>
         <p class="t-lead" data-intro-item>${c.summary}</p>
         <div class="book-card__tags" data-intro-item><span class="tag" data-tone="cream">${c.instructor}</span><span class="tag" data-tone="sun">${c.lessons.length} video lesson${c.lessons.length > 1 ? 's' : ''}</span><span class="tag">Free to watch</span></div>
@@ -162,7 +162,7 @@ export function renderCoursePage(el: HTMLElement, id: string | null) {
         </div>
       </div>
       <aside class="player__side">
-        <div class="player__progress"><p><strong data-player-progress>0 / ${c.lessons.length}</strong> lessons watched</p><span class="player__bar"><span data-player-bar></span></span></div>
+        <div class="player__progress"><p><strong data-player-progress>0 / ${c.lessons.length}</strong> lessons watched</p><p class="player__done" data-player-complete hidden>course complete 🎓</p><span class="player__bar"><span data-player-bar></span></span></div>
         <ol class="faq__list player__lessons">${lessons}</ol>
         <div class="player__skills"><p class="t-hand">skills you’ll gain</p><div class="book-card__tags">${c.skills.map((s, i) => `<span class="tag" data-tone="${toneOrder[i % toneOrder.length]}">${s}</span>`).join('')}</div></div>
         <p class="plans__note">Lessons are embedded from YouTube. All videos belong to their original creators.</p>
@@ -182,7 +182,28 @@ export function renderCoursePage(el: HTMLElement, id: string | null) {
     }`;
 }
 
-const arrowIcon = `<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+// ---- Developer support plan (mock ₹10 / month) -----------------------------
+
+export function renderSupportPlan(el: HTMLElement) {
+  el.innerHTML = `
+    <article class="support-card" data-spotlight data-support data-scatter-item data-tilt="2">
+      <span class="support-card__sticker" data-plop>mock plan!</span>
+      <span class="support-card__badge" aria-hidden="true">supporter ♥</span>
+      <p class="t-hand">developer support</p>
+      <p class="support-card__price" aria-label="10 rupees per month"><span class="support-card__cur">₹</span><span data-count="10">10</span><small>/ month</small></p>
+      <ul class="support-card__perks">
+        <li><span aria-hidden="true">✓</span>A supporter badge on your Edusphere logo</li>
+        <li><span aria-hidden="true">✓</span>Vote on the next subject we add</li>
+        <li><span aria-hidden="true">✓</span>Early peek at new courses</li>
+        <li><span aria-hidden="true">✓</span>Keeps the developers in chai</li>
+      </ul>
+      <button class="btn" type="button" data-support-toggle><span class="btn__label">Support for ₹10 / month</span><span class="btn__icon">${arrowIcon}</span></button>
+      <p class="support-card__status" data-support-status aria-live="polite"></p>
+      <p class="plans__note">A mock subscription for a demo project. No payment is taken and no card details are ever asked for.</p>
+    </article>`;
+}
+
+const arrowIcon =`<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
 // Original line illustrations for the four steps (drawn for this project).
 export const stepArt = {

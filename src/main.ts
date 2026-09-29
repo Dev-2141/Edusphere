@@ -7,8 +7,9 @@ import './styles/pages.css';
 import barba from '@barba/core';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { initConfetti } from './motion/confetti';
+import { burst, initConfetti } from './motion/confetti';
 import { initAccordions, initTabs } from './motion/disclosure';
+import { initFinale } from './motion/finale';
 import { initMagnetic, initPlayful } from './motion/playful';
 import { initFloatingCta, initNav, initScenes } from './motion/scenes';
 import { initSliders } from './motion/slider';
@@ -16,8 +17,8 @@ import { getLenis, initSmoothScroll, onScroll, scrollToTop } from './motion/smoo
 import { initText } from './motion/text';
 import { dur, ease, reducedMotion, type Cleanup } from './motion/tokens';
 import { curtainEnter, curtainLeave } from './motion/transitions';
-import { footerHTML, markActive, mountChrome } from './ui/chrome';
-import { embedURL, renderBookGrid, renderBookSlider, renderChoice, renderCoursePage, renderCourseTracks, renderGenreCovers, renderGenreList, stepArt, watchURL } from './ui/render';
+import { footerHTML, markActive, mountChrome, setSupporter } from './ui/chrome';
+import { embedURL, renderBookGrid, renderBookSlider, renderChoice, renderCoursePage, renderCourseTracks, renderGenreCovers, renderGenreList, renderSupportPlan, stepArt, watchURL } from './ui/render';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -77,11 +78,22 @@ function initPlayer(scope: HTMLElement): Cleanup {
   const iframe = root.querySelector<HTMLIFrameElement>('[data-player-iframe]')!;
   const bar = root.querySelector<HTMLElement>('[data-player-bar]')!;
 
-  const paint = () => {
+  const badge = root.querySelector<HTMLElement>('[data-player-complete]')!;
+  let complete = false;
+  const paint = (celebrate = false) => {
     const done = buttons.filter((b) => watched.has(b.dataset.lesson!)).length;
     buttons.forEach((b) => b.toggleAttribute('data-watched', watched.has(b.dataset.lesson!)));
     root.querySelector('[data-player-progress]')!.textContent = `${done} / ${buttons.length}`;
     gsap.to(bar, { scaleX: done / buttons.length, duration: reducedMotion() ? 0 : dur.standard, ease: ease.pop });
+    const now = done === buttons.length;
+    if (now && !complete) {
+      badge.hidden = false;
+      if (celebrate) {
+        burst(bar, ['🎓', '✨', '⭐', '📚']);
+        if (!reducedMotion()) gsap.fromTo(badge, { scale: 0, rotate: -30 }, { scale: 1, rotate: -4, duration: dur.editorial, ease: ease.elastic });
+      }
+    }
+    complete = now;
   };
   const play = (btn: HTMLButtonElement) => {
     const id = btn.dataset.lesson!;
@@ -95,7 +107,7 @@ function initPlayer(scope: HTMLElement): Cleanup {
     try {
       localStorage.setItem(key, JSON.stringify([...watched]));
     } catch {}
-    paint();
+    paint(true);
     if (!reducedMotion()) gsap.fromTo(frame, { scale: 0.96, rotate: -1.5 }, { scale: 1, rotate: 0, duration: dur.standard, ease: ease.pop });
   };
   const click = (e: Event) => {
@@ -105,6 +117,60 @@ function initPlayer(scope: HTMLElement): Cleanup {
   root.addEventListener('click', click);
   paint();
   return () => root.removeEventListener('click', click);
+}
+
+/** Mock ₹10/month developer-support plan. No payment: state lives in this browser only. */
+function initSupport(scope: HTMLElement): Cleanup {
+  const offs = [...scope.querySelectorAll<HTMLElement>('[data-support]')].map((card) => {
+    const btn = card.querySelector<HTMLButtonElement>('[data-support-toggle]')!;
+    const label = btn.querySelector<HTMLElement>('.btn__label')!;
+    const status = card.querySelector<HTMLElement>('[data-support-status]')!;
+    const key = 'edusphere:supporter';
+    const since = () => {
+      try {
+        return localStorage.getItem(key);
+      } catch {
+        return null;
+      }
+    };
+    const paint = () => {
+      const d = since();
+      card.toggleAttribute('data-active', !!d);
+      btn.classList.toggle('btn--cream', !!d);
+      label.textContent = d ? 'Cancel support (demo)' : 'Support for ₹10 / month';
+      status.textContent = d ? `You’re a supporter since ${new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}. Thank you! (demo: nothing was charged)` : '';
+      setSupporter(!!d);
+    };
+    const click = () => {
+      if (btn.disabled) return;
+      if (since()) {
+        try {
+          localStorage.removeItem(key);
+        } catch {}
+        paint();
+        return;
+      }
+      // Fake "processing" beat so the confirmation feels like a real checkout.
+      btn.disabled = true;
+      label.textContent = 'Setting up…';
+      gsap.delayedCall(reducedMotion() ? 0 : 0.9, () => {
+        try {
+          localStorage.setItem(key, new Date().toISOString());
+        } catch {}
+        btn.disabled = false;
+        paint();
+        burst(btn, ['💛', '☕', '✨', '🎉']);
+        if (!reducedMotion()) {
+          gsap.fromTo(card.querySelector('.support-card__badge'), { scale: 0, rotate: 40 }, { scale: 1, rotate: 8, duration: dur.editorial, ease: ease.elastic, clearProps: 'transform' });
+          gsap.fromTo(status, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: dur.micro });
+        }
+      });
+    };
+    btn.addEventListener('click', click);
+    paint();
+    return () => btn.removeEventListener('click', click);
+  });
+  return () => offs.forEach((o) => o());
 }
 
 function initLogin(scope: HTMLElement): Cleanup {
@@ -152,6 +218,7 @@ async function initPage(container: HTMLElement) {
   if (tracks) renderCourseTracks(tracks);
   const course = container.querySelector<HTMLElement>('[data-render="course"]');
   if (course) renderCoursePage(course, new URLSearchParams(location.search).get('id'));
+  container.querySelectorAll<HTMLElement>('[data-render="support-plan"]').forEach(renderSupportPlan);
   const gl = container.querySelector<HTMLElement>('[data-render="genres"]');
   if (gl) renderGenreList(gl);
   const gc = container.querySelector<HTMLElement>('[data-render="genre-covers"]');
@@ -173,6 +240,8 @@ async function initPage(container: HTMLElement) {
     initConfetti(container),
     initFilter(container),
     initPlayer(container),
+    initSupport(container),
+    initFinale(container),
     initLogin(container),
     initContact(container),
     initFloatingCta(container),

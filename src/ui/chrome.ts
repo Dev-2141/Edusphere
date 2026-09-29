@@ -12,12 +12,13 @@ export const btn = (label: string, href: string, tone = '', attrs = '') =>
 // Original brand mark: a moth whose wings are two open pages.
 export const mothMark = `<svg class="moth" viewBox="0 0 64 64" aria-hidden="true"><g fill="currentColor"><path d="M31 18c-6-9-20-12-26-6-5 6 0 18 9 21-6 3-8 12-2 16 6 4 14-2 19-12z"/><path d="M33 18c6-9 20-12 26-6 5 6 0 18-9 21 6 3 8 12 2 16-6 4-14-2-19-12z"/><rect x="30" y="16" width="4" height="30" rx="2"/><path d="M31 17c-2-5-6-8-9-9M33 17c2-5 6-8 9-9" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></g><g fill="var(--wing, #fff8ec)" opacity=".9"><path d="M28 22c-5-5-13-6-17-3"/><path d="M13 22h12M12 26h14M16 30h11" stroke="var(--wing, #fff8ec)" stroke-width="1.4" stroke-linecap="round"/><path d="M39 22h12M38 26h14M37 30h11" stroke="var(--wing, #fff8ec)" stroke-width="1.4" stroke-linecap="round"/></g></svg>`;
 
-const logo = `<a class="logo" href="/" aria-label="Edusphere — home">${mothMark}<span class="logo__word">Edusphere</span><span class="logo__club">Learn<br/>Online</span></a>`;
+const logo = `<a class="logo" href="./" aria-label="Edusphere — home">${mothMark}<span class="logo__word">Edusphere</span><span class="logo__club">Learn<br/>Online</span></a>`;
 
 const links = [
-  ['All Courses', '/courses.html'],
-  ['Gifting', '/gifting.html'],
-  ['FAQ', '/faq.html'],
+  ['All Courses', 'courses.html'],
+  ['Gifting', 'gifting.html'],
+  ['FAQ', 'faq.html'],
+  ['Support ₹10', 'support.html'],
 ];
 
 export function mountChrome() {
@@ -27,10 +28,10 @@ export function mountChrome() {
     ${logo}
     <nav class="nav__center" aria-label="Main">
       ${links.map(([l, h]) => `<a class="pill" href="${h}">${l}</a>`).join('')}
-      ${btn('Log-in / Join', '/login.html', 'btn--sun btn--sm')}
+      ${btn('Log-in / Join', 'login.html', 'btn--sun btn--sm')}
     </nav>
     <div class="nav__right">
-      <a class="pill pill--round" href="/contact.html" aria-label="About us &amp; contact" title="About us &amp; contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+      <a class="pill pill--round" href="contact.html" aria-label="About us &amp; contact" title="About us &amp; contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
       <button class="nav__burger" aria-expanded="false" aria-controls="menu" aria-label="Open menu"><span></span><span></span></button>
     </div>`;
 
@@ -40,14 +41,14 @@ export function mountChrome() {
   menu.hidden = true;
   menu.innerHTML = `
     <nav class="menu__inner" aria-label="Mobile">
-      ${[['Home', '/'], ...links, ['About & Contact', '/contact.html'], ['Log-in / Join', '/login.html']].map(([l, h]) => `<a class="menu__link" href="${h}">${l}</a>`).join('')}
+      ${[['Home', './'], ...links, ['About & Contact', 'contact.html'], ['Log-in / Join', 'login.html']].map(([l, h]) => `<a class="menu__link" href="${h}">${l}</a>`).join('')}
       <p class="t-hand menu__note">new courses every month</p>
     </nav>`;
 
   const cta = document.createElement('div');
   cta.className = 'floating-cta';
   cta.dataset.floatingCta = '';
-  cta.innerHTML = btn('Join for free', '/login.html', '', 'data-magnetic');
+  cta.innerHTML = btn('Join for free', 'login.html', '', 'data-magnetic');
 
   const curtain = document.createElement('div');
   curtain.className = 'curtain';
@@ -80,6 +81,15 @@ export function mountChrome() {
   return { nav, closeMenu: () => burger.getAttribute('aria-expanded') === 'true' && setMenu(false), curtain };
 }
 
+/** Supporters of the mock ₹10 plan get a small badge on the logo. */
+export function setSupporter(on: boolean) {
+  document.documentElement.toggleAttribute('data-supporter', on);
+}
+
+try {
+  setSupporter(!!localStorage.getItem('edusphere:supporter'));
+} catch {}
+
 export function markActive(path: string) {
   document.querySelectorAll<HTMLAnchorElement>('.nav a, .menu a').forEach((a) => {
     const on = new URL(a.href).pathname.replace(/index\.html$/, '') === path.replace(/index\.html$/, '');
@@ -103,8 +113,8 @@ export function footerHTML() {
           </form>
         </div>
         <nav class="footer__links" aria-label="Footer">
-          <div><p class="footer__h">Learn</p><a href="/courses.html">All courses</a><a href="/gifting.html">Gifting</a><a href="/faq.html">FAQ</a><a href="/contact.html">About &amp; contact</a></div>
-          <div><p class="footer__h">Account</p><a href="/login.html">Log in</a><a href="/login.html">Join</a></div>
+          <div><p class="footer__h">Learn</p><a href="courses.html">All courses</a><a href="gifting.html">Gifting</a><a href="faq.html">FAQ</a><a href="support.html">Support the developers</a><a href="contact.html">About &amp; contact</a></div>
+          <div><p class="footer__h">Account</p><a href="login.html">Log in</a><a href="login.html">Join</a></div>
           <div><p class="footer__h">Small print</p><a href="#">Terms (placeholder)</a><a href="#">Privacy (placeholder)</a></div>
         </nav>
       </div>

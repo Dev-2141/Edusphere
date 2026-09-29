@@ -202,3 +202,23 @@ html[data-menu="open"] .nav__center, html[data-menu="open"] .pill--round { visib
   .footer__links { grid-template-columns: 1fr 1fr; }
   .logo__club { display: none; }
 }
+
+/* Supporter badge (mock ₹10 plan) */
+.logo { position: relative; }
+.logo::after {
+  content: "♥";
+  position: absolute;
+  left: 30px;
+  top: -6px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--c-coral);
+  color: var(--c-cream);
+  font-size: 0.7rem;
+  transform: scale(0) rotate(-30deg);
+  transition: transform var(--dur-standard) var(--ease-spring);
+}
+:root[data-supporter] .logo::after { transform: scale(1) rotate(-10deg); }
